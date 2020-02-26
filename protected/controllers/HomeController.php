@@ -16,7 +16,7 @@ class HomeController extends Controller
 			array('allow',
 				'actions'=>array(
 					'Index',
-					'createProject',
+					'ViewResident',
                 ),
 				'roles'=>array('rxClient'),
 			),
@@ -38,44 +38,36 @@ class HomeController extends Controller
 		));
 	}
 
-	public function actioncreateProject()
+	public function actionViewResident()
 	{
-		$retVal = 'error';
-		$retMessage = 'Error';
-
 		$vm = (object) array();
-		$vm->project = new Project('search');
+		$retMessage = (object) array();
+		$vm->resident = new Resident('search');
 
-		if (isset($_POST['NewProject']))
+
+		if (isset( $_POST['Resident']))
 		{
-			$vm->project->attributes = $_POST['NewProject'];
-			$vm->project->budget = str_replace(",","",$_POST['NewProject']['budget']);
+			$retVal = 'success';
+			$vm->resident = Resident::model()->findByAttributes([
+				'resident_id' => $_POST['Resident']['resident_id'],
+			]);
 
-			if ($vm->project->save()) 
-			{
-				$retVal = 'success';
-				$retMessage = $vm->project->proj_code;
-			}
-			else
-			{
-				if($vm->project->hasErrors())
-					{
-						foreach ($vm->project as $error) {
-							$retMessage .= '<br/> - ' . $error[0];
-						}
-					}
-			}
+			$retMessage->details1 = $this->renderPartial('/resident/_viewResident', array(
+				'vm' => $vm,
+			), true);
 		}
 		else
 		{
-			$retVal = 'danger';
-			$retMessage = 'No Data Entry';
+			if($vm->resident->hasErrors())
+				{
+					foreach ($vm->resident as $error) {
+						$retMessage .= '<br/> - ' . $error[0];
+					}
+				}
 		}
-
 		$this->renderPartial('/json/json_ret', array(
 			'retVal' => $retVal,
 			'retMessage' => $retMessage,
-			
 		));
 	}
 }

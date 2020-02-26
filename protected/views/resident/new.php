@@ -5,8 +5,10 @@
 
 <style>
 .has-error .select2-selection {
-    border: 1px solid #a94442;
-    border-radius: 4px;
+
+}
+.error{
+	color:red;
 }
 </style>
 
@@ -59,21 +61,6 @@ $saveResident = Yii::app()->createUrl( "resident/save" );
 $index = Yii::app()->createUrl( "resident/new" );
 
 Yii::app()->clientScript->registerScript('reservation', "
-$('#Resident_birthday').change(function(){
-	//alert('The text has been changed.');
-  });
-/// Select settings
-$('#Resident_gender').select2({
-	placeholder: 'Select/Enter Gender',
-	width: '100%'
-});
-
-$('#Resident_civil_status').select2({
-	placeholder: 'Select/Enter Civil Status',
-	width: '100%'
-});
-
-
 ///submit form
 $(document).on('click', '.save_resident', function(){
 	$('#formNewResident').submit();
@@ -198,11 +185,6 @@ $().ready(function() {
 			required : 'Please Select/Enter Birthdate',
 		}
 	});
-
-
-
-	
-
 
 
 });

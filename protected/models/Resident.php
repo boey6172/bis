@@ -52,6 +52,7 @@ class Resident extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'Gender'=>[self::HAS_ONE, 'Gender', ['gender_id' => 'gender' ]],
 		);
 	}
 
@@ -125,7 +126,11 @@ class Resident extends CActiveRecord
             return true;
         } else
             return false;
-    }
+	}
+	public function getFullname()
+	{
+		return $this->first_name . " " . $this->midle_name . " " . $this->last_name ;
+	}
 
 
 

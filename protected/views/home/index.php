@@ -73,9 +73,9 @@ $form = $this->beginWidget(
 			<div class="tab-content">
 				<div class="tab-pane active" role="tabpanel" id="step1">
 					<?php 
-						// echo $this->renderPartial('/resident/_newHousehold', array(
-						// 	'vm' => $vm
-						// ), true)
+						echo $this->renderPartial('/resident/_searchResident', array(
+							'vm' => $vm
+						), true)
 					?>
 					<ul class="list-inline pull-left">
 							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
@@ -191,6 +191,7 @@ function prevTab(elem) {
 	
 	$projectCreate = Yii::app()->createUrl( "home/createProject" );
 	$projectView = Yii::app()->createUrl( "project/view" );
+	$retResident = Yii::app()->createUrl( "home/viewResident" );
 	$index = Yii::app()->createUrl( "home/index" );
 	$success = 'success';
 	$error = 'error';
@@ -209,6 +210,58 @@ function prevTab(elem) {
 	$(document).on('click', '.next-step', function(){
 		$('#quantity_form').submit();		
 	});
+	
+	$('#Resident_resident_id').on('change', function(){
+		viewResident();
+	});
+
+
+	function viewResident()
+	{
+	var sd = $('#Resident_resident_id').val();
+
+	var YII_CSRF_TOKEN = '{$csrf}';
+
+		$.ajax({
+	        type        : 'POST',
+	        url         : '{$retResident}',
+	        data: {
+				'Resident[resident_id]':sd,
+				'YII_CSRF_TOKEN':YII_CSRF_TOKEN,
+			},
+	        dataType:'json',
+			statusCode: {
+			       403: function() { 
+			       		window.location =  '{$index}';
+				   },
+				   200: function(data) {
+						var json = data;
+
+					    if(json.retVal == '{$success}')
+						{
+							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+							setTimeout(function() { 
+								myAlertSaving(false);
+								//$('#sowModal').modal('hide');
+								myAlert('The Project was edited Successfully', 'myalert-' + json.retVal);
+								setTimeout(function() {
+								 	$('.residentInformation').html(json.retMessage.details1);
+									//refreshScope();
+								}, 1000);
+							}, 1500);	
+						}
+						else if(json.retVal == '{$error}')
+						{
+						myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+						else
+						{
+							myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+				   }
+				}
+	    })
+	}
 
    ");
 ?>

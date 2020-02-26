@@ -90,6 +90,7 @@ $form = $this->beginWidget(
 					'data' => $gender,
 					'options' => array(
 						'placeholder' => 'Select/Enter Gender.',
+						'width' =>'100%',
 						
 					),
 				),
@@ -125,6 +126,7 @@ $form = $this->beginWidget(
 					'data' => $status,
 					'options' => array(
 						'placeholder' => 'Select/Enter Civil Status.',
+						'width' =>'100%',
 					),
 				),
 			)
