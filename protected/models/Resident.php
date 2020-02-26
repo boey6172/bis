@@ -53,6 +53,7 @@ class Resident extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'Gender'=>[self::HAS_ONE, 'Gender', ['gender_id' => 'gender' ]],
+			'CivilStatus'=>[self::HAS_ONE, 'CivilStatus', ['status_id' => 'civil_status' ]],
 		);
 	}
 

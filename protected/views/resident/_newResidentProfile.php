@@ -11,7 +11,7 @@ $form = $this->beginWidget(
 <br/>
 <div class="box-body">
     <div class="row">
-		<div class="col-md-10">
+		<div class="col-md-4">
 			<?php
 				echo $form->textFieldGroup($vm->resident, 'first_name', array(
 					'widgetOptions' => array(
@@ -22,9 +22,8 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-4">
 			<?php
 				echo $form->textFieldGroup($vm->resident, 'midle_name', array(
 					'widgetOptions' => array(
@@ -35,9 +34,8 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-4">
 			<?php
 				echo $form->textFieldGroup($vm->resident, 'last_name', array(
 					'widgetOptions' => array(
@@ -48,9 +46,10 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
+		
 	</div>
     <div class="row">
-		<div class="col-md-10">
+		<div class="col-md-2">
 			<?php
 				echo $form->textFieldGroup($vm->resident, 'age', array(
 					'widgetOptions' => array(
@@ -61,23 +60,7 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
-	</div>
-	
-	<div class="row">
-		<div class="col-md-10">
-			<?php
-				echo $form->textFieldGroup($vm->resident, 'occupation', array(
-					'widgetOptions' => array(
-						'htmlOptions' => array(
-							'autocomplete' => 'off',
-						)
-					)
-				));
-			?>
-		</div>	
-	</div>
-	<div class="row">
-		<div class="col-md-10 ">
+		<div class="col-md-4 ">
 		<?php
 		$gender = CHtml::listData( Gender::model()->findAll(array()), 'gender_id', 'description'); ?>
 
@@ -97,9 +80,76 @@ $form = $this->beginWidget(
 			)
 		);?>
 		</div>
+		<div class="col-md-6 ">
+			<?php
+			$status = CHtml::listData( CivilStatus::model()->findAll(array()), 'status_id', 'description'); ?>
+
+			<?php echo $form->select2Group(
+				$vm->resident,
+				'civil_status',
+				array(
+
+					'widgetOptions' => array(
+						'data' => $status,
+						'options' => array(
+							'placeholder' => 'Select/Enter Civil Status.',
+							'width' =>'100%',
+						),
+					),
+				)
+			);?>
+		</div>
 	</div>
+
 	<div class="row">
-		<div class="col-md-10">
+		<div class="col-md-6">
+			<?php
+				echo $form->textFieldGroup($vm->resident, 'birthplace', array(
+					'widgetOptions' => array(
+						'htmlOptions' => array(
+							'autocomplete' => 'off',
+						)
+					)
+				));
+			?>
+		</div>	
+		<div class="col-md-6">
+			<?php echo $form->datePickerGroup(
+				$vm->resident,
+				'birthday',
+				array(
+					'widgetOptions' => array(
+						'htmlOptions' => array(
+							'readonly' => true,
+						),
+						'options' => array(
+							'language' => 'en',
+							'format' => 'yyyy-mm-dd',
+						),
+					),
+					'wrapperHtmlOptions' => array(
+					//	'class' => 'col-sm-5',
+					),
+					// 'hint' => 'Click inside! This is a super cool date field.',
+					'append' => '<i class="fa fa-calendar"></i>',
+					'readOnly'=>true,
+				)
+			); ?>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-md-6">
+			<?php
+				echo $form->textFieldGroup($vm->resident, 'occupation', array(
+					'widgetOptions' => array(
+						'htmlOptions' => array(
+							'autocomplete' => 'off',
+						)
+					)
+				));
+			?>
+		</div>	
+		<div class="col-md-6">
 			<?php
 				echo $form->textFieldGroup($vm->resident, 'educational_attainment', array(
 					'widgetOptions' => array(
@@ -111,57 +161,11 @@ $form = $this->beginWidget(
 			?>
 		</div>	
 	</div>
-
-	<div class="row">
-		<div class="col-md-10 ">
-		<?php
-		$status = CHtml::listData( CivilStatus::model()->findAll(array()), 'status_id', 'description'); ?>
-
-		<?php echo $form->select2Group(
-			$vm->resident,
-			'civil_status',
-			array(
-
-				'widgetOptions' => array(
-					'data' => $status,
-					'options' => array(
-						'placeholder' => 'Select/Enter Civil Status.',
-						'width' =>'100%',
-					),
-				),
-			)
-		);?>
-		</div>
-	</div>
-<div class="row">
-	<div class="col-md-10">
-		<?php echo $form->datePickerGroup(
-			$vm->resident,
-			'birthday',
-			array(
-				'widgetOptions' => array(
-					'htmlOptions' => array(
-						'readonly' => true,
-					),
-					'options' => array(
-						'language' => 'en',
-					),
-				),
-				'wrapperHtmlOptions' => array(
-				//	'class' => 'col-sm-5',
-				),
-				// 'hint' => 'Click inside! This is a super cool date field.',
-				'append' => '<i class="fa fa-calendar"></i>',
-				'readOnly'=>true,
-			)
-		); ?>
-	</div>
-</div>
 </div>
 
 
 <div class="box-footer">
-		<?php
+		<!-- <?php
 			$this->widget(
 			    'booster.widgets.TbButton',
 			    array(
@@ -174,7 +178,7 @@ $form = $this->beginWidget(
 			        ),
 			    )
 			);
-		?>
+		?> -->
 </div>
 
 

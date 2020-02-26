@@ -47,7 +47,7 @@ $form = $this->beginWidget(
 					<li role="presentation" class="disabled">
 						<a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
 							<span class="round-tab">
-								<i class="fa fa-home fa-lg"></i>
+								<i class="fa fa-user fa-lg"></i>
 							</span>
 						</a>
 					</li>
@@ -55,7 +55,7 @@ $form = $this->beginWidget(
 					<li role="presentation" class="disabled">
 						<a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
 							<span class="round-tab">
-								<i class="fa fa-user fa-lg"></i>
+								<i class="fa fa-home fa-lg"></i>
 							</span>
 						</a>
 					</li>
@@ -84,42 +84,30 @@ $form = $this->beginWidget(
 
 				<div class="tab-pane" role="tabpanel" id="step2">
 					<?php 
-						echo $this->renderPartial('/resident/_newHousehold', array(
+						echo $this->renderPartial('/resident/_newResidentProfile', array(
 							'vm' => $vm
 						), true)
 					?>
 					<ul class="list-inline pull-left">
-							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step initialize"><i class="fa fa-chevron-circle-left"></i> <!-- Previous --></button></li>
+							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step "><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
 					</ul>
 					<ul class="list-inline pull-right">
-							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp"><i class="fa fa-chevron-circle-right"></i> <!-- Next --></button></li>
+							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp validateResident"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
 					</ul>
 				</div>
 
 				<div class="tab-pane" role="tabpanel" id="step3">
-					<!-- <br>
-					<div class="alert alert-info">
-						<b><span class="fa fa-question-circle"></span>  Please enter details Customer Details </b>
-					</div> -->
-					
-					<div class="row-fluid">
-						<div class="list-view">
-							<div class="row">
-								<div id="step3-content"></div>
-									<?php 
-											echo $this->renderPartial('/resident/_newResidentProfile', array(
-												'vm' => $vm
-											), true)
-									?>
-							</div>
-						</div>
-					</div>
-					<div style="clear: both;"></div>
+					<?php 
+						echo $this->renderPartial('/resident/_newHousehold', array(
+							'vm' => $vm
+						), true)
+					?>
+
 					<ul class="list-inline pull-left">
-						<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> <!-- Previous --></button></li>
+						<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
 					</ul>
 					<ul class="list-inline pull-right">
-							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp fillSummary"><i class="fa fa-chevron-circle-right"></i> <!-- Next --></button></li>
+							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp fillSummary"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
 					</ul>
 				</div>
 				<div class="tab-pane" role="tabpanel" id="complete">
@@ -204,9 +192,7 @@ function prevTab(elem) {
 		active.next().removeClass('disabled');
 		nextTab(active);
 	}
-	$(document).on('click', '.next-step', function(){
-		$('#quantity_form').submit();		
-	});
+
 
 	function initialSelect2()
 	{
@@ -221,9 +207,11 @@ function prevTab(elem) {
 			},
 			placeholder: 'Select/Enter Resident.',
 			width :'100%',
+			
 		});
 	}
-	
+
+
 	$(document).on('click', '#create', function(){
 		nextStep();		
 		hideSelect();
@@ -236,6 +224,181 @@ function prevTab(elem) {
 		$('#Resident_resident_id').select2();
 	}
 
+
+
+
+	$(document).on('click', '.validateResident', function(){
+		// $('#formNewResident').submit();
+		nextStep();
+		// saveResident();
+	});
+
+	$('#Resident_gender').on('change', function() {
+		$(this).valid();
+	});
+	$('#Resident_civil_status').on('change', function() {
+		$(this).valid();
+	});
+	
+	
+	/// validator for resident
+	$().ready(function() {
+		$('#formNewResident').validate(
+		{
+			ignore: [], 
+			submitHandler: function() {
+				nextStep();
+			},
+			highlight: function (element, errorClass, validClass) {
+				$(element).addClass(errorClass); //.removeClass(errorClass);
+				$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$(element).removeClass(errorClass); //.addClass(validClass);
+				$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+			},
+			errorElement : 'div',
+			errorLabelContainer: '.error',
+			errorPlacement: function (error, element) {
+				if (element.parent('.input-group').length) { 
+					error.insertAfter(element.parent());      // radio/checkbox?
+				} else if (element.hasClass('select2')) {     
+					error.insertAfter(element.next('form-control'));  // select2
+				} else {                                      
+					error.insertAfter(element);               // default
+				}
+			}
+		});
+	
+
+		$('#Resident_first_name').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'First Name Required',
+			}
+		});
+		$('#Resident_midle_name').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Middle Name Required',
+			}
+		});
+		$('#Resident_last_name').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Last Name Required',
+			}
+		});
+		$('#Resident_age').rules('add', {
+			required:true,
+			digits:true,
+			minlength:1,
+			messages : {
+				required : 'Please Enter the age of the resident',
+			}
+		});
+		$('#Resident_occupation').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the occupation of the Resident',
+			}
+		});
+		$('#Resident_birthplace').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the birth place of the Resident',
+			}
+		});
+		$('#Resident_gender').rules('add', {
+			required:true,
+			minlength:1,
+			messages : {
+				required : 'Please Select/Enter Gender',
+			}
+		});
+		$('#Resident_educational_attainment').rules('add', {
+			required:true,
+			minlength:1,
+			messages : {
+				required : 'Please Select/Enter Educational Attainment',
+			}
+		});
+		$('#Resident_civil_status').rules('add', {
+			required:true,
+			minlength:1,
+			messages : {
+				required : 'Please Select/Enter Civil Status',
+			}
+		});
+		$('#Resident_birthday').rules('add', {
+			required:true,
+			minlength:1,
+			messages : {
+				required : 'Please Select/Enter Birthdate',
+			}
+			
+		});
+
+	});
+
+	/// validator for household
+	$().ready(function() {
+		$('#formNewResident').validate(
+		{
+			ignore: [], 
+			submitHandler: function() {
+				nextStep();
+			},
+			highlight: function (element, errorClass, validClass) {
+				$(element).addClass(errorClass); //.removeClass(errorClass);
+				$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$(element).removeClass(errorClass); //.addClass(validClass);
+				$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+			},
+			errorElement : 'div',
+			errorLabelContainer: '.error',
+			errorPlacement: function (error, element) {
+				if (element.parent('.input-group').length) { 
+					error.insertAfter(element.parent());      // radio/checkbox?
+				} else if (element.hasClass('select2')) {     
+					error.insertAfter(element.next('form-control'));  // select2
+				} else {                                      
+					error.insertAfter(element);               // default
+				}
+			}
+		});
+	
+
+		$('#HouseHold_first_resided').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter what year that resident resided',
+			}
+		});
+		$('#HouseHold_type_of_house').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the type of house',
+			}
+		});
+		$('#HouseHold_type_of_house').rules('add', {
+			required:false,
+			minlength:2,
+			messages : {
+				required : 'Please enter the type of house',
+			}
+		});
+
+	});
 
 
 
