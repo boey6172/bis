@@ -51,7 +51,7 @@ class HomeController extends Controller
 			$vm->resident = Resident::model()->findByAttributes([
 				'resident_id' => $_POST['Resident']['resident_id'],
 			]);
-
+				
 			$retMessage->details1 = $this->renderPartial('/resident/_viewResident', array(
 				'vm' => $vm,
 			), true);

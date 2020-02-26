@@ -77,9 +77,6 @@ $form = $this->beginWidget(
 							'vm' => $vm
 						), true)
 					?>
-					<ul class="list-inline pull-left">
-							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
-					</ul>
 					<ul class="list-inline pull-right">
 							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp next-step"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
 					</ul>
@@ -92,7 +89,7 @@ $form = $this->beginWidget(
 						), true)
 					?>
 					<ul class="list-inline pull-left">
-							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> <!-- Previous --></button></li>
+							<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step initialize"><i class="fa fa-chevron-circle-left"></i> <!-- Previous --></button></li>
 					</ul>
 					<ul class="list-inline pull-right">
 							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp"><i class="fa fa-chevron-circle-right"></i> <!-- Next --></button></li>
@@ -198,7 +195,7 @@ function prevTab(elem) {
 	$csrf = Yii::app()->request->csrfToken;
 
    Yii::app()->clientScript->registerScript('home_script', "
-
+   initialSelect2();
    	function nextStep() {
 		var active = $('.wizard .nav-tabs li.active');
 		var success = $('.connecting-line .connecting-success');
@@ -210,11 +207,41 @@ function prevTab(elem) {
 	$(document).on('click', '.next-step', function(){
 		$('#quantity_form').submit();		
 	});
+
+	function initialSelect2()
+	{
+		$('#Resident_resident_id').select2({
+			language: {
+				'noResults': function(){
+					return ' <a href=# id=create class=btn btn-danger create>Create new Resident</a>';
+				}
+			},
+			escapeMarkup: function (markup) {
+				return markup;
+			},
+			placeholder: 'Select/Enter Resident.',
+			width :'100%',
+		});
+	}
 	
+	$(document).on('click', '#create', function(){
+		nextStep();		
+		hideSelect();
+		initialSelect2();
+	});
+
+	function hideSelect()
+	{
+		$('#Resident_resident_id').select2('destroy');
+		$('#Resident_resident_id').select2();
+	}
+
+
+
+
 	$('#Resident_resident_id').on('change', function(){
 		viewResident();
 	});
-
 
 	function viewResident()
 	{

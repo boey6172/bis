@@ -23,7 +23,7 @@ $form = $this->beginWidget(
 					'options' => array(
                         'placeholder' => 'Select/Enter Resident.',
                         'width' =>'100%',
-						
+                       
 					),
 				),
 			)
