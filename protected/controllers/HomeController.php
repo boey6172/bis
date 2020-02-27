@@ -17,6 +17,10 @@ class HomeController extends Controller
 				'actions'=>array(
 					'Index',
 					'ViewResident',
+					'SaveResident',
+					'SaveHouseHold',
+
+
                 ),
 				'roles'=>array('rxClient'),
 			),
@@ -31,7 +35,8 @@ class HomeController extends Controller
 	{
 		$vm = (object) array();
 		$vm->resident = new Resident('search');
-		$vm->houseHold = new Household('search');
+		$vm->houseHold = new HouseHold('search');
+		$vm->householdResident = new HouseholdResident('search');
 			
 		$this->render('index', array(
 			'vm' => $vm,
@@ -68,6 +73,84 @@ class HomeController extends Controller
 		$this->renderPartial('/json/json_ret', array(
 			'retVal' => $retVal,
 			'retMessage' => $retMessage,
+		));
+	}
+	public function actionSaveResident()
+	{
+		$retVal = 'error';
+		$retMessage = 'Error';
+
+		$vm = (object) array();
+		$vm->resident = new Resident('search');
+
+		if (isset($_POST['Resident']))
+		{
+			$vm->resident->attributes = $_POST['Resident'];
+
+			if ($vm->resident->save()) 
+			{
+				$retVal = 'success';
+				$retMessage = 'success';
+			}
+			else
+			{
+				if($vm->resident->hasErrors())
+					{
+						foreach ($vm->resident as $error) {
+							$retMessage .= '<br/> - ' . $error;
+						}
+					}
+			}
+		}
+		else
+		{
+			$retVal = 'danger';
+			$retMessage = 'No Data Entry';
+		}
+
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+			
+		));
+	}
+	public function actionSaveHousehold()
+	{
+		$retVal = 'error';
+		$retMessage = 'Error';
+
+		$vm = (object) array();
+		$vm->houseHold = new HouseHold('search');
+
+		if (isset($_POST['HouseHold']))
+		{
+			$vm->houseHold->attributes = $_POST['HouseHold'];
+
+			if ($vm->houseHold->save()) 
+			{
+				$retVal = 'success';
+				$retMessage = 'success';
+			}
+			else
+			{
+				if($vm->houseHold->hasErrors())
+					{
+						foreach ($vm->houseHold as $error) {
+							$retMessage .= '<br/> - ' . $error;
+						}
+					}
+			}
+		}
+		else
+		{
+			$retVal = 'danger';
+			$retMessage = 'No Data Entry';
+		}
+
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+			
 		));
 	}
 }

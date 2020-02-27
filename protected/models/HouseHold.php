@@ -5,8 +5,8 @@
  *
  * The followings are the available columns in table 'household':
  * @property string $household_id
- * @property string $headoffamily
  * @property integer $house_ownership
+ * @property string $type_of_house
  * @property string $first_resided
  * @property string $unit_number
  * @property string $house_number
@@ -15,6 +15,7 @@
  * @property string $district_name
  * @property string $city
  * @property string $municipality
+ * @property string $province
  * @property string $postal_code
  * @property string $country
  */
@@ -36,14 +37,14 @@ class HouseHold extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('household_id, headoffamily, house_ownership, first_resided, unit_number, house_number, street, barangay, district_name, city, municipality, postal_code, country', 'required'),
+			array('type_of_house, first_resided, street, barangay, district_name, city , province, postal_code, country', 'required'),
 			array('house_ownership', 'numerical', 'integerOnly'=>true),
-			array('household_id, headoffamily', 'length', 'max'=>36),
+			array('household_id', 'length', 'max'=>36),
+			array('type_of_house, unit_number, house_number, street, barangay, district_name, city, municipality, province, postal_code, country', 'length', 'max'=>256),
 			array('first_resided', 'length', 'max'=>4),
-			array('unit_number, house_number, street, barangay, district_name, city, municipality, postal_code, country', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('household_id, headoffamily, house_ownership, first_resided, unit_number, house_number, street, barangay, district_name, city, municipality, postal_code, country', 'safe', 'on'=>'search'),
+			array('household_id, house_ownership, type_of_house, first_resided, unit_number, house_number, street, barangay, district_name, city, municipality, province, postal_code, country', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,16 +66,17 @@ class HouseHold extends CActiveRecord
 	{
 		return array(
 			'household_id' => 'Household',
-			'headoffamily' => 'Headoffamily',
 			'house_ownership' => 'House Ownership',
+			'type_of_house' => 'Type Of House',
 			'first_resided' => 'First Resided',
 			'unit_number' => 'Unit Number',
 			'house_number' => 'House Number',
-			'street' => 'Street',
+			'street' => 'Street/Block/Lot',
 			'barangay' => 'Barangay',
 			'district_name' => 'District Name',
 			'city' => 'City',
 			'municipality' => 'Municipality',
+			'province' => 'Province',
 			'postal_code' => 'Postal Code',
 			'country' => 'Country',
 		);
@@ -99,8 +101,8 @@ class HouseHold extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('household_id',$this->household_id,true);
-		$criteria->compare('headoffamily',$this->headoffamily,true);
 		$criteria->compare('house_ownership',$this->house_ownership);
+		$criteria->compare('type_of_house',$this->type_of_house,true);
 		$criteria->compare('first_resided',$this->first_resided,true);
 		$criteria->compare('unit_number',$this->unit_number,true);
 		$criteria->compare('house_number',$this->house_number,true);
@@ -109,12 +111,27 @@ class HouseHold extends CActiveRecord
 		$criteria->compare('district_name',$this->district_name,true);
 		$criteria->compare('city',$this->city,true);
 		$criteria->compare('municipality',$this->municipality,true);
+		$criteria->compare('province',$this->province,true);
 		$criteria->compare('postal_code',$this->postal_code,true);
 		$criteria->compare('country',$this->country,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	public function beforeSave() {
+        if(parent::beforeSave()) {
+        	
+        	if(($this->isNewRecord)) {
+            	$this->household_id = Yii::app()->db->createCommand('select UUID()')->queryScalar();
+            	// $this->proj_code = $this->ProjectCode();
+        		// $this->created_date = date('Y-m-d H:i:s');
+        		// $this->created_by = Yii::app()->user->id;
+            }
+            // $this->ra_date = date('Y-m-d H:i:s');
+            return true;
+        } else
+            return false;
 	}
 
 	/**

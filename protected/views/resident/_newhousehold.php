@@ -10,8 +10,32 @@ $form = $this->beginWidget(
 
 <br/>
 <div class="box-body">
+	<div class="row">
+		<div class="col-md-10 ">
+			<?php
+			$resident = CHtml::listData( Resident::model()->findAll(array()), 'resident_id', 'Fullname'); ?>
+
+			<?php echo $form->select2Group(
+				$vm->householdResident,
+				'resident_id',
+				array(
+
+					'widgetOptions' => array(
+						'data' => $resident,
+						'options' => array(
+							'placeholder' => 'Search Resident',
+							'width' =>'100%',
+						
+						),
+					),
+				)
+			);?>
+		</div>
+	</div>
+
+
     <div class="row">
-		<div class="col-md-10">
+		<div class="col-md-3">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'first_resided', array(
 					'widgetOptions' => array(
@@ -22,11 +46,9 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+		<div class="col-md-3">
 			<?php
-				echo $form->textFieldGroup($vm->houseHold, 'unit_number', array(
+				echo $form->textFieldGroup($vm->houseHold, 'type_of_house', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
@@ -35,22 +57,21 @@ $form = $this->beginWidget(
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
-			<?php
-				echo $form->textFieldGroup($vm->houseHold, 'house_number', array(
+		<div class="col-md-3">
+			<!-- <?php
+				echo $form->checkBoxGroup($vm->houseHold, 'house_ownership', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
 						)
 					)
 				));
-			?>
+			?> -->
 		</div>	
 	</div>
     <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-4">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'street', array(
 					'widgetOptions' => array(
@@ -60,67 +81,86 @@ $form = $this->beginWidget(
 					)
 				));
 			?>
-		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+		</div>
+		<div class="col-md-4">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'barangay', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
+							'value' =>'Bulusan',
+							'readOnly' =>'true',
 						)
 					)
 				));
 			?>
-		</div>	
+		</div>
+		<div class="col-md-4">
+			<?php
+				echo $form->textFieldGroup($vm->houseHold, 'province', array(
+					'widgetOptions' => array(
+						'htmlOptions' => array(
+							'autocomplete' => 'off',
+							'value' =>'Oriental Mindoro',
+							'readOnly' =>'true',
+						)
+					)
+				));
+			?>
+		</div>		
 	</div>
     <div class="row">
-		<div class="col-md-10">
+		<div class="col-md-3">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'district_name', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
+							'value' =>'First District',
+							'readOnly' =>'true',
 						)
 					)
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-3">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'city', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
+							'value' =>'Calapan City',
+							'readOnly' =>'true',
+
 						)
 					)
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-1">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'postal_code', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
+							'value' =>'5200',
+							'readOnly' =>'true',
 						)
 					)
 				));
 			?>
 		</div>	
-	</div>
-    <div class="row">
-		<div class="col-md-10">
+
+		<div class="col-md-5">
 			<?php
 				echo $form->textFieldGroup($vm->houseHold, 'country', array(
 					'widgetOptions' => array(
 						'htmlOptions' => array(
 							'autocomplete' => 'off',
+							'value' =>'Philippines',
+							'readOnly' =>'true',
 						)
 					)
 				));
@@ -132,7 +172,7 @@ $form = $this->beginWidget(
 
 
 <div class="box-footer">
-		<?php
+		<!-- <?php
 			$this->widget(
 			    'booster.widgets.TbButton',
 			    array(
@@ -145,7 +185,7 @@ $form = $this->beginWidget(
 			        ),
 			    )
 			);
-		?>
+		?> -->
 </div>
 
 
@@ -153,9 +193,7 @@ $form = $this->beginWidget(
 <?php
 
 Yii::app()->clientScript->registerScript('reservation', "
-$('#Resident_birthday').change(function(){
-	alert('The text has been changed.');
-  });
+
 
 var settings = 'placeholder: yehey,width: 100%,';
 

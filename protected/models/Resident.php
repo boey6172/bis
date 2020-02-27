@@ -33,7 +33,7 @@ class Resident extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array(' first_name, midle_name, last_name, gender, birthday, age, civil_status, occupation, educational_attainment,', 'required'),
+			array(' first_name , last_name, gender, birthday, age, civil_status, occupation, educational_attainment,', 'required'),
 			array('age', 'numerical', 'integerOnly'=>true),
 			array('resident_id, gender, civil_status', 'length', 'max'=>36),
 			array('age', 'length', 'max'=>3),
@@ -128,6 +128,7 @@ class Resident extends CActiveRecord
         } else
             return false;
 	}
+	
 	public function getFullname()
 	{
 		return $this->first_name . " " . $this->midle_name . " " . $this->last_name ;

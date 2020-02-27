@@ -107,7 +107,7 @@ $form = $this->beginWidget(
 						<li><button type="button" class="btn cus_btn btn-primary btn-mp prev-step"><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
 					</ul>
 					<ul class="list-inline pull-right">
-							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp fillSummary"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
+							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp validateHouseHold"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
 					</ul>
 				</div>
 				<div class="tab-pane" role="tabpanel" id="complete">
@@ -177,6 +177,9 @@ function prevTab(elem) {
 	$projectCreate = Yii::app()->createUrl( "home/createProject" );
 	$projectView = Yii::app()->createUrl( "project/view" );
 	$retResident = Yii::app()->createUrl( "home/viewResident" );
+	$saveResident = Yii::app()->createUrl( "home/saveResident" );
+	$saveHouseHold = Yii::app()->createUrl( "home/saveHouseHold" );
+
 	$index = Yii::app()->createUrl( "home/index" );
 	$success = 'success';
 	$error = 'error';
@@ -228,9 +231,15 @@ function prevTab(elem) {
 
 
 	$(document).on('click', '.validateResident', function(){
-		// $('#formNewResident').submit();
-		nextStep();
-		// saveResident();
+		$('#formNewResident').submit();
+		// nextStep();
+	
+	});
+
+	$(document).on('click', '.validateHouseHold', function(){
+		$('#formNewHouseHold').submit();
+		// nextStep();
+		
 	});
 
 	$('#Resident_gender').on('change', function() {
@@ -279,7 +288,7 @@ function prevTab(elem) {
 			}
 		});
 		$('#Resident_midle_name').rules('add', {
-			required:true,
+			required:false,
 			minlength:2,
 			messages : {
 				required : 'Middle Name Required',
@@ -348,11 +357,11 @@ function prevTab(elem) {
 
 	/// validator for household
 	$().ready(function() {
-		$('#formNewResident').validate(
+		$('#formNewHouseHold').validate(
 		{
 			ignore: [], 
 			submitHandler: function() {
-				nextStep();
+				viewSaveHouseHoldResident();
 			},
 			highlight: function (element, errorClass, validClass) {
 				$(element).addClass(errorClass); //.removeClass(errorClass);
@@ -390,11 +399,53 @@ function prevTab(elem) {
 				required : 'Please enter the type of house',
 			}
 		});
-		$('#HouseHold_type_of_house').rules('add', {
-			required:false,
+		$('#HouseHold_street').rules('add', {
+			required:true,
 			minlength:2,
 			messages : {
-				required : 'Please enter the type of house',
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_barangay').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_province').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_district_name').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_city').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_postal_code').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
+			}
+		});
+		$('#HouseHold_country').rules('add', {
+			required:true,
+			minlength:2,
+			messages : {
+				required : 'Please enter the Street/block/Lot',
 			}
 		});
 
@@ -432,11 +483,9 @@ function prevTab(elem) {
 							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
 							setTimeout(function() { 
 								myAlertSaving(false);
-								//$('#sowModal').modal('hide');
 								myAlert('The Project was edited Successfully', 'myalert-' + json.retVal);
 								setTimeout(function() {
 								 	$('.residentInformation').html(json.retMessage.details1);
-									//refreshScope();
 								}, 1000);
 							}, 1500);	
 						}
@@ -451,6 +500,77 @@ function prevTab(elem) {
 				   }
 				}
 	    })
+	}
+
+
+	function viewSaveHouseHoldResident()
+	{
+
+		$.ajax({
+	        type        : 'POST',
+	        url         : '{$saveResident}',
+	        data: $('#formNewResident').serialize(),
+
+	        dataType:'json',
+			statusCode: {
+			       403: function() { 
+			       		window.location =  '{$index}';
+				   },
+				   200: function(data) {
+						var json = data;
+
+					    if(json.retVal == '{$success}')
+						{
+							
+							$.ajax({
+								type        : 'POST',
+								url         : '{$saveHouseHold}',
+								data: $('#formNewHouseHold').serialize(),
+					
+								dataType:'json',
+								statusCode: {
+									   403: function() { 
+											   window.location =  '{$index}';
+									   },
+									   200: function(data) {
+											var json = data;
+					
+											if(json.retVal == '{$success}')
+											{
+												
+												myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+					
+												setTimeout(function() { 
+													myAlertSaving(false);
+													myAlert('The Resident was edited Successfully', 'myalert-' + json.retVal);
+												}, 1500);
+					
+													
+											}
+											else
+											{
+												myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+											}
+									   }
+									}
+							})
+
+							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+
+							setTimeout(function() { 
+								myAlertSaving(false);
+								myAlert('The Resident was edited Successfully', 'myalert-' + json.retVal);
+							}, 1500);
+
+								
+						}
+						else
+						{
+							myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+				   }
+				}
+		})
 	}
 
    ");
