@@ -146,23 +146,35 @@
             </li>  
             <li class=" ">
                 <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
-                    <i class="fa fa-dashboard fa-fw"></i> <span>Home</span>
+                    <i class="fa fa-certificate fa-fw"></i> <span>Certificates/Documents</span>
+
+                </a>
+            </li>  
+            <li class=" ">
+                <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
+                    <i class="fa fa-user fa-fw"></i> <span>Resident</span>
 
                 </a>
             </li>  
 
             <li class=" ">
                 <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
-                    <i class="fa fa-search fa-fw"></i> <span>Reports</span>
+                    <i class="fa fa-home fa-fw"></i> <span>HouseHold</span>
 
                 </a>
             </li>  
             <li class=" ">
                 <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
-                    <i class="fa fa-dashboard fa-fw"></i> <span>Users</span>
+                    <i class="fa fa-bar-chart fa-fw"></i> <span>Reports</span>
 
                 </a>
-            </li>  
+            </li>
+            <li class=" ">
+                <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
+                    <i class="fa fa-gear fa-fw"></i> <span>Maintenance</span>
+
+                </a>
+            </li>   
 
           
        
