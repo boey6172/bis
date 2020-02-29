@@ -145,13 +145,13 @@
                 </a>
             </li>  
             <li class=" ">
-                <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
+                <a href="<?php echo Yii::app()->createUrl('resident/index'); ?>">
                     <i class="fa fa-certificate fa-fw"></i> <span>Certificates/Documents</span>
 
                 </a>
             </li>  
             <li class=" ">
-                <a href="<?php echo Yii::app()->createUrl('home/index'); ?>">
+                <a href="<?php echo Yii::app()->createUrl('resident/index'); ?>">
                     <i class="fa fa-user fa-fw"></i> <span>Resident</span>
 
                 </a>
