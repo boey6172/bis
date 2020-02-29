@@ -21,6 +21,7 @@
  */
 class HouseHold extends CActiveRecord
 {
+	public $res_id;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -44,7 +45,7 @@ class HouseHold extends CActiveRecord
 			array('first_resided', 'length', 'max'=>4),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('household_id, house_ownership, type_of_house, first_resided, unit_number, house_number, street, barangay, district_name, city, municipality, province, postal_code, country', 'safe', 'on'=>'search'),
+			array('household_id, house_ownership, type_of_house, first_resided, unit_number, house_number, street, barangay, district_name, city, municipality, province, postal_code, country,res_id', 'safe', 'on'=>'search'),
 		);
 	}
 

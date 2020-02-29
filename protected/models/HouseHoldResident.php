@@ -26,11 +26,11 @@ class HouseHoldResident extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('household_resident_id, resident_id, household_id', 'required'),
+			array('resident_id, household_id', 'required'),
 			array('household_resident_id, resident_id, household_id', 'length', 'max'=>36),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('household_resident_id, resident_id, household_id', 'safe', 'on'=>'search'),
+			array(' resident_id, household_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,6 +82,20 @@ class HouseHoldResident extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	public function beforeSave() {
+        if(parent::beforeSave()) {
+        	
+        	if(($this->isNewRecord)) {
+            	$this->household_resident_id = Yii::app()->db->createCommand('select UUID()')->queryScalar();
+            	// $this->proj_code = $this->ProjectCode();
+        		// $this->created_date = date('Y-m-d H:i:s');
+        		// $this->created_by = Yii::app()->user->id;
+            }
+            // $this->ra_date = date('Y-m-d H:i:s');
+            return true;
+        } else
+            return false;
 	}
 
 	/**

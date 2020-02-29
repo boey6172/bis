@@ -505,7 +505,7 @@ function prevTab(elem) {
 
 	function viewSaveHouseHoldResident()
 	{
-
+		var resident_id ;
 		$.ajax({
 	        type        : 'POST',
 	        url         : '{$saveResident}',
@@ -521,12 +521,20 @@ function prevTab(elem) {
 
 					    if(json.retVal == '{$success}')
 						{
+							$('#HouseHold_res_id').val(json.retMessage)   ;
+							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+							$(document).ajaxStart(function() { Pace.restart(); });
+
+							setTimeout(function() { 
+								myAlertSaving(false);
+								myAlert('The Resident was edited Successfully', 'myalert-' + json.retVal);
+								
+							}, 1500);
 							
 							$.ajax({
 								type        : 'POST',
 								url         : '{$saveHouseHold}',
-								data: $('#formNewHouseHold').serialize(),
-					
+								data: $('#formNewHouseHold').serialize() , 
 								dataType:'json',
 								statusCode: {
 									   403: function() { 
@@ -555,12 +563,7 @@ function prevTab(elem) {
 									}
 							})
 
-							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
 
-							setTimeout(function() { 
-								myAlertSaving(false);
-								myAlert('The Resident was edited Successfully', 'myalert-' + json.retVal);
-							}, 1500);
 
 								
 						}

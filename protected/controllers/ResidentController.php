@@ -18,7 +18,10 @@ class ResidentController extends Controller
                     'Index',
 					'new',
 					'save',
-					
+					'View',
+					'ViewResident',	
+					'ViewNewResident',		
+
                 ),
 				'roles'=>array('rxClient'),
 			),
@@ -33,14 +36,98 @@ class ResidentController extends Controller
 	{
 		$vm = (object) array();
 		$vm->resident = new Resident('search');
-		$vm->houseHold = new HouseHold('search');
+		//$vm->houseHold = new HouseHold('search');
 		
-		// $vm->listProject = new Project('search');
-			
 		$this->render('index', array(
 			'vm' => $vm,
 		));
-    }
+	}
+
+	public function actionView()
+	{
+		$vm = (object) array();
+		$retMessage = (object) array();
+		$vm->resident = new Resident('search');
+
+
+		if (isset( $_POST['Resident']))
+		{
+			$retVal = 'success';
+			$vm->resident = Resident::model()->findByAttributes([
+				'resident_id' => $_POST['Resident']['resident_id'],
+			]);
+				
+			$retMessage = $this->renderPartial('_viewResident', array(
+				'vm' => $vm,
+			), true);
+		}
+		else
+		{
+			if($vm->resident->hasErrors())
+				{
+					foreach ($vm->resident as $error) {
+						$retMessage .= '<br/> - ' . $error[0];
+					}
+				}
+		}
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+		));
+	}
+	public function actionViewResident()
+	{
+		$vm = (object) array();
+		$retMessage = (object) array();
+		$vm->resident = new Resident('search');
+
+
+		if (isset( $_POST['Resident']))
+		{
+			$retVal = 'success';
+			$vm->resident = Resident::model()->findByAttributes([
+				'resident_id' => $_POST['Resident']['resident_id'],
+			]);
+				
+			$retMessage = $this->renderPartial('_newResidentProfile', array(
+				'vm' => $vm,
+			), true, true);
+		}
+		else 
+		{
+			if($vm->resident->hasErrors())
+				{
+					foreach ($vm->resident as $error) {
+						$retMessage .= '<br/> - ' . $error[0];
+					}
+				}
+		}
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+		));
+	}
+	public function actionViewNewResident()
+	{
+		$vm = (object) array();
+		$retMessage = (object) array();
+		$vm->resident = new Resident('search');
+		$retVal = 'success';
+
+			$retMessage = $this->renderPartial('_newResidentProfile', array(
+				'vm' => $vm,
+			), true, true);
+		
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+		));
+	}
+	
+
+
+
+
     public function actionNew()
 	{
 		$vm = (object) array();

@@ -169,7 +169,7 @@ $form = $this->beginWidget(
 	</div>
     
 </div>
-
+<?php echo $form->hiddenField($vm->houseHold, 'res_id', array());?>
 
 <div class="box-footer">
 		<!-- <?php

@@ -90,7 +90,7 @@ class HomeController extends Controller
 			if ($vm->resident->save()) 
 			{
 				$retVal = 'success';
-				$retMessage = 'success';
+				$retMessage = $vm->resident->resident_id;
 			}
 			else
 			{
@@ -121,6 +121,8 @@ class HomeController extends Controller
 
 		$vm = (object) array();
 		$vm->houseHold = new HouseHold('search');
+		$vm->houseHoldResident = new HouseHoldResident('search');
+
 
 		if (isset($_POST['HouseHold']))
 		{
@@ -128,8 +130,20 @@ class HomeController extends Controller
 
 			if ($vm->houseHold->save()) 
 			{
-				$retVal = 'success';
-				$retMessage = 'success';
+				$vm->houseHoldResident->resident_id = $vm->houseHold->res_id;
+				$vm->houseHoldResident->household_id = $vm->houseHold->household_id;
+
+				if ($vm->houseHoldResident->save()) 
+				{
+					$retVal = 'success';
+					$retMessage = 'success';
+				}
+				if($vm->houseHoldResident->hasErrors())
+				{
+					foreach ($vm->houseHoldResident as $error) {
+						$retMessage .= '<br/> - ' . $error;
+					}
+				}
 			}
 			else
 			{
