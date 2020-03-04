@@ -11,4 +11,5 @@
         <span class="info-box-number"><small>Educational Attainment: <?php echo $vm->resident->educational_attainment?></small></span>
         <span class="info-box-number"><small>Occupation: <?php echo $vm->resident->occupation?></small></span>
     </div>
+    
 </div>

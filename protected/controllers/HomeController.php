@@ -19,6 +19,8 @@ class HomeController extends Controller
 					'ViewResident',
 					'SaveResident',
 					'SaveHouseHold',
+					'viewCertificate',
+					'saveBarangaycert',
 
 
                 ),
@@ -37,6 +39,8 @@ class HomeController extends Controller
 		$vm->resident = new Resident('search');
 		$vm->houseHold = new HouseHold('search');
 		$vm->householdResident = new HouseholdResident('search');
+		$vm->certificateRecord = new CertificateRecord('search');
+		// $vm->barangayClearance = new BarangayClearance('search');
 			
 		$this->render('index', array(
 			'vm' => $vm,
@@ -75,6 +79,45 @@ class HomeController extends Controller
 			'retMessage' => $retMessage,
 		));
 	}
+
+	public function actionViewCertificate()
+	{
+		$vm = (object) array();
+		$retMessage = (object) array();
+		$vm->certificateRecord = new CertificateRecord('search');
+		$vm->resident = new Resident('search');
+
+		
+
+
+
+		if (isset( $_POST['CertificateRecord']) && isset( $_POST['Resident']))
+		{
+			$retVal = 'success';
+			$vm->resident = Resident::model()->findByAttributes([
+				'resident_id' => $_POST['Resident']['resident_id'],
+			]);
+
+			$vm->barangayClearance = new BarangayClearance('search');
+			$retMessage->details1 = $this->renderPartial('/certificate/_barangayCertificateForm', array(
+				'vm' => $vm,
+			), true);
+		}
+		else
+		{
+			if($vm->CertificateRecord->hasErrors())
+				{
+					foreach ($vm->CertificateRecord as $error) {
+						$retMessage .= '<br/> - ' . $error[0];
+					}
+				}
+		}
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+		));
+	}
+
 	public function actionSaveResident()
 	{
 		$retVal = 'error';
@@ -122,6 +165,8 @@ class HomeController extends Controller
 		$vm = (object) array();
 		$vm->houseHold = new HouseHold('search');
 		$vm->houseHoldResident = new HouseHoldResident('search');
+		
+
 
 
 		if (isset($_POST['HouseHold']))
@@ -136,7 +181,7 @@ class HomeController extends Controller
 				if ($vm->houseHoldResident->save()) 
 				{
 					$retVal = 'success';
-					$retMessage = 'success';
+					$retMessage = $vm->houseHoldResident->resident_id;
 				}
 				if($vm->houseHoldResident->hasErrors())
 				{
@@ -166,6 +211,48 @@ class HomeController extends Controller
 			'retMessage' => $retMessage,
 			
 		));
+	}
+	public function actionsaveBarangaycert()
+	{
+		$retVal = 'error';
+		$retMessage = 'Error';
+
+		$vm = (object) array();
+		$vm->resident = new Resident('search');
+		$vm->BarangayClearance = new BarangayClearance('search');
+
+
+		if (isset($_POST['Resident']) && isset($_POST['CertificateRecord']) && isset($_POST['BarangayClearance']))
+		{
+			$vm->BarangayClearance->attributes = $_POST['BarangayClearance'];
+			$vm->BarangayClearance->resident_id = $_POST['Resident']['resident_id'];
+			if ($vm->BarangayClearance->save()) 
+			{
+				$retVal = 'success';
+				$retMessage = $vm->BarangayClearance->barangay_clearance_id;
+			}
+			else
+			{
+				if($vm->resident->hasErrors())
+					{
+						foreach ($vm->resident as $error) {
+							$retMessage .= '<br/> - ' . $error;
+						}
+					}
+			}
+		}
+		else
+		{
+			$retVal = 'danger';
+			$retMessage = 'No Data Entry';
+		}
+
+		$this->renderPartial('/json/json_ret', array(
+			'retVal' => $retVal,
+			'retMessage' => $retMessage,
+			
+		));
+
 	}
 }
 

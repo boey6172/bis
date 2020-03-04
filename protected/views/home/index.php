@@ -44,7 +44,7 @@ $form = $this->beginWidget(
 						</a>
 					</li>
 
-					<li role="presentation" class="disabled">
+					<li role="presentation" class="disabled starting">
 						<a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
 							<span class="round-tab">
 								<i class="fa fa-user fa-lg"></i>
@@ -52,7 +52,7 @@ $form = $this->beginWidget(
 						</a>
 					</li>
 
-					<li role="presentation" class="disabled">
+					<li role="presentation" class="disabled lasting">
 						<a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
 							<span class="round-tab">
 								<i class="fa fa-home fa-lg"></i>
@@ -78,7 +78,8 @@ $form = $this->beginWidget(
 						), true)
 					?>
 					<ul class="list-inline pull-right">
-							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp next-step"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
+						<button id="last" type="button" class="btn cus_btn btn-primary btn-mp button-last hidden"><i class="fa fa-chevron-circle-right"></i> Next</button>
+							<!-- <li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp next-step"><i class="fa fa-chevron-circle-right"></i> Next</button></li> -->
 					</ul>
 				</div>
 
@@ -110,16 +111,17 @@ $form = $this->beginWidget(
 							<li><button id="submit_form_btn" type="button" class="btn cus_btn btn-primary btn-mp validateHouseHold"><i class="fa fa-chevron-circle-right"></i> Next</button></li>
 					</ul>
 				</div>
-				<div class="tab-pane" role="tabpanel" id="complete">
-						<div class="list-view">
-							<div class="row">
-								<div id="complete-content"></div>
+				<div class="tab-pane" role="tabpanel" id="complete">				
+							<?php 
+								echo $this->renderPartial('/certificate/_chooseCertificate', array(
+									'vm' => $vm
+								), true)
+							?>		
 
-							</div>
-						</div>
-				<button type="button" class="btn cus_btn btn-primary btn-mp prev-step pull-left"><i class="fa fa-chevron-circle-left"></i> Back</button>
-
-				<button type="button" class="btn cus_btn btn-success btn-mp pull-right" id="save_reservation_btn"><i class="fa fa-check-circle-o"></i> Save</button>
+					<ul class="list-inline pull-left">
+						<li><button type="button" class="btn cus_btn btn-primary btn-mp start"><i class="fa fa-chevron-circle-left"></i> Previous</button></li>
+					</ul>
+				<!-- <button type="button" class="btn cus_btn btn-success btn-mp pull-right" id="save_reservation_btn"><i class="fa fa-check-circle-o"></i> Save</button> -->
 				</div>
 				<div class="clearfix"></div>
 			</div> <!-- end of Tab Content -->
@@ -144,14 +146,33 @@ $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 
 $(".next-step").click(function (e) {
 
-	var $active = $('.wizard .nav-tabs li.active');
+		var $active = $('.wizard .nav-tabs li.active');
 		var $success = $('.connecting-line .connecting-success');
 		var containerWidth = ($(".connecting-line .connecting-success").width() / $(".connecting-line").width())* 100;
 		$('.connecting-line .connecting-success').width(containerWidth +(25 / 100) * 100 + '%');
 		$active.next().removeClass('disabled');
 		nextTab($active);
+		
+
 
 	});
+	$("#last").click(function (e) {
+
+		var $active = $('.lasting');
+		var $success = $('.connecting-line .connecting-success');
+		var containerWidth = ($(".connecting-line .connecting-success").width() / $(".connecting-line").width())* 100;
+		$('.connecting-line .connecting-success').width(containerWidth +(75 / 100) * 100 + '%');
+		$active.next().removeClass('disabled');
+		nextTab($active);
+
+	});
+	$(".start").click(function (e) {
+			var $active = $('.starting');
+			 var containerWidth = ($(".connecting-line .connecting-success").width() / $(".connecting-line").width())* 100;
+			 $('.connecting-line .connecting-success').width(containerWidth -  (75 / 100) * 100 + '%');
+			prevTab($active);
+	});
+
 
 	$(".prev-step").click(function (e) {
 			var $active = $('.wizard .nav-tabs li.active');
@@ -159,6 +180,7 @@ $(".next-step").click(function (e) {
 			 $('.connecting-line .connecting-success').width(containerWidth -  (25 / 100) * 100 + '%');
 			prevTab($active);
 	});
+
 });
 
 function nextTab(elem) {
@@ -177,8 +199,12 @@ function prevTab(elem) {
 	$projectCreate = Yii::app()->createUrl( "home/createProject" );
 	$projectView = Yii::app()->createUrl( "project/view" );
 	$retResident = Yii::app()->createUrl( "home/viewResident" );
+	$retCertifcateForm = Yii::app()->createUrl( "home/viewCertificate" );
 	$saveResident = Yii::app()->createUrl( "home/saveResident" );
 	$saveHouseHold = Yii::app()->createUrl( "home/saveHouseHold" );
+	$saveBarangaycert = Yii::app()->createUrl( "home/saveBarangaycert" );
+	$viewBarangaycert = Yii::app()->createUrl( "certificate/BarangayCertificate" );
+
 
 	$index = Yii::app()->createUrl( "home/index" );
 	$success = 'success';
@@ -187,7 +213,7 @@ function prevTab(elem) {
 
    Yii::app()->clientScript->registerScript('home_script', "
    initialSelect2();
-   	function nextStep() {
+   function nextStep() {
 		var active = $('.wizard .nav-tabs li.active');
 		var success = $('.connecting-line .connecting-success');
 		var containerWidth = ($('.connecting-line .connecting-success').width() / $('.connecting-line').width())* 100;
@@ -195,6 +221,7 @@ function prevTab(elem) {
 		active.next().removeClass('disabled');
 		nextTab(active);
 	}
+
 
 
 	function initialSelect2()
@@ -213,7 +240,12 @@ function prevTab(elem) {
 			
 		});
 	}
-
+	$(document).on('click', '#chocho', function(){
+		// $('#formNewResident').submit();
+		// nextStep();
+		// alert();
+	
+	});
 
 	$(document).on('click', '#create', function(){
 		nextStep();		
@@ -241,6 +273,7 @@ function prevTab(elem) {
 		// nextStep();
 		
 	});
+
 
 	$('#Resident_gender').on('change', function() {
 		$(this).valid();
@@ -361,7 +394,7 @@ function prevTab(elem) {
 		{
 			ignore: [], 
 			submitHandler: function() {
-				viewSaveHouseHoldResident();
+				SaveHouseHoldResident();
 			},
 			highlight: function (element, errorClass, validClass) {
 				$(element).addClass(errorClass); //.removeClass(errorClass);
@@ -451,6 +484,15 @@ function prevTab(elem) {
 
 	});
 
+	$(document).on('click', '.save_certificate', function(){
+		Savebrangaycertificate();
+	});
+
+
+	
+
+
+
 
 
 	$('#Resident_resident_id').on('change', function(){
@@ -460,6 +502,8 @@ function prevTab(elem) {
 	function viewResident()
 	{
 	var sd = $('#Resident_resident_id').val();
+	
+	$('#CertificateRecord_resident_id').val(sd);
 
 	var YII_CSRF_TOKEN = '{$csrf}';
 
@@ -483,8 +527,9 @@ function prevTab(elem) {
 							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
 							setTimeout(function() { 
 								myAlertSaving(false);
-								myAlert('The Project was edited Successfully', 'myalert-' + json.retVal);
+								myAlert('The Resident loaded Successfully', 'myalert-' + json.retVal);
 								setTimeout(function() {
+									$('#last').removeClass('hidden');
 								 	$('.residentInformation').html(json.retMessage.details1);
 								}, 1000);
 							}, 1500);	
@@ -502,8 +547,61 @@ function prevTab(elem) {
 	    })
 	}
 
+	$('#CertificateRecord_type_of_certificate').on('change', function(){
+		viewCertificateForm();
+	});
 
-	function viewSaveHouseHoldResident()
+	function viewCertificateForm()
+	{
+	var tc = $('#CertificateRecord_type_of_certificate').val();
+	var ri = $('#CertificateRecord_resident_id').val();
+	var YII_CSRF_TOKEN = '{$csrf}';
+
+		$.ajax({
+	        type        : 'POST',
+	        url         : '{$retCertifcateForm}',
+	        data: {
+				'CertificateRecord[type_of_certificate]':tc,
+				'Resident[resident_id]':ri,
+				'YII_CSRF_TOKEN':YII_CSRF_TOKEN,
+			},
+	        dataType:'json',
+			statusCode: {
+			       403: function() { 
+			       		window.location =  '{$index}';
+				   },
+				   200: function(data) {
+						var json = data;
+
+					    if(json.retVal == '{$success}')
+						{
+							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+							setTimeout(function() { 
+								myAlertSaving(false);
+								myAlert('The Certificate form loaded Successfully', 'myalert-' + json.retVal);
+								setTimeout(function() {
+									 $('.certificateInformation').html(json.retMessage.details1);
+								}, 1000);
+				
+							}, 1500);	
+						}
+						else if(json.retVal == '{$error}')
+						{
+						myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+						else
+						{
+							myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+				   }
+				}
+	    })
+	}
+
+
+
+
+	function SaveHouseHoldResident()
 	{
 		var resident_id ;
 		$.ajax({
@@ -521,7 +619,7 @@ function prevTab(elem) {
 
 					    if(json.retVal == '{$success}')
 						{
-							$('#HouseHold_res_id').val(json.retMessage)   ;
+							$('#HouseHold_res_id').val(json.retMessage) ;
 							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
 							$(document).ajaxStart(function() { Pace.restart(); });
 
@@ -551,6 +649,8 @@ function prevTab(elem) {
 												setTimeout(function() { 
 													myAlertSaving(false);
 													myAlert('The Resident was edited Successfully', 'myalert-' + json.retVal);
+													$('#CertificateRecord_resident_id').val(json.retMessage);
+													nextStep();
 												}, 1500);
 					
 													
@@ -565,6 +665,56 @@ function prevTab(elem) {
 
 
 
+								
+						}
+						else
+						{
+							myAlert('Sorry for the Inconvinience this error was sent to our development Team. Please Refresh and Try again. ', 'myalert-' + json.retVal);
+						}
+				   }
+				}
+		})
+	}
+	
+	function Savebrangaycertificate()
+	{
+		
+		var tc = $('#CertificateRecord_type_of_certificate').val();
+		var ri = $('#CertificateRecord_resident_id').val();
+		var age = $('#BarangayClearance_age').val();
+		var p = $('#BarangayClearance_purpose').val();
+
+
+		var YII_CSRF_TOKEN = '{$csrf}';
+		$.ajax({
+	        type        : 'POST',
+	        url         : '{$saveBarangaycert}',
+			data: 
+			{
+				'CertificateRecord[type_of_certificate]':tc,
+				'Resident[resident_id]':ri,
+				'BarangayClearance[age]':age,
+				'BarangayClearance[purpose]':p,
+				'YII_CSRF_TOKEN':YII_CSRF_TOKEN,
+			},
+	        dataType:'json',
+			statusCode: {
+			       403: function() { 
+			       		window.location =  '{$index}';
+				   },
+				   200: function(data) {
+						var json = data;
+
+					    if(json.retVal == '{$success}')
+						{
+
+							myAlertSaving(true, 'Wait, loading...', 'myalert-info');
+
+							setTimeout(function() { 
+								myAlertSaving(false);
+								myAlert('The Certificate was added was edited Successfully', 'myalert-' + json.retVal);
+								window.location =  '{$viewBarangaycert}' + '&id=' + json.retMessage;
+							}, 1500);
 								
 						}
 						else
